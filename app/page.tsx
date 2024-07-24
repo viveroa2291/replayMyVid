@@ -63,11 +63,9 @@ testRumblePattern(testUrl2);
       <p className='text-center'>Your Music... No Interruptions</p>
       <div className='flex flex-col items-center mt-8'>
         <form action="">
-          <input className='border-solid border-2 border-light-blue-500 h-9 w-96 text-center' type="text" name='link' placeholder='Enter the URL...'
-            value={videoUrl} onChange={handleInputChange}
-          />
-          <button className='p-2 bg-red-700 text-center ml-2 hover:text-red-600 hover:bg-white hover:border-2 hover:border-red-600 font-serif rounded text-sm text-white' type="button" onClick={handleReplayClick}>REPLAY</button>
-        </form>
+          <input className='border-solid border-2 border-light-blue-500 h-9 w-96 text-center' type="text" name='link' placeholder='Enter the URL...' value={videoUrl} onChange={handleInputChange} />
+        </form>          
+        <button className='p-2 mt-2 bg-red-700 text-center hover:text-red-600 hover:bg-white hover:border-2 hover:border-red-600 font-serif rounded text-sm text-white' type="button" onClick={handleReplayClick}>REPLAY</button>
         {iframeSrc && (
           <iframe width="640" height="360" src={iframeSrc} allowFullScreen title="Video player"/>
         )}
