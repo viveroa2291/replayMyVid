@@ -1,6 +1,7 @@
 "use client";
 import { useState, ChangeEvent, MouseEvent } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
 import logo from './images/logo.png';
 
 export default function Home() {
@@ -11,20 +12,28 @@ export default function Home() {
     setVideoUrl(event.target.value);
   };
 
-  const handleReplayClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleReplayClick = async (event: MouseEvent<HTMLButtonElement>) => {
     // YouTube URL pattern
     const youtubePattern = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     // Rumble URL pattern
-    const rumblePattern = /rumble\.com\/v\/([a-zA-Z0-9_-]+)(?:\/[^?]*|\?.*)?$/;
+    const rumblePattern = /rumble\.com\/v([a-zA-Z0-9_-]+)-/;
     console.log('VideoURL: ' + videoUrl);
-    if (youtubePattern.test(videoUrl)) {
-      const videoId = videoUrl.match(youtubePattern)?.[1];      
-      alert('Entered inside the Youtube');
-      if (videoId) {
-        setIframeSrc(`https://www.youtube.com/embed/${videoId}`);
+    
+  if (rumblePattern.test(videoUrl)) {
+    try {
+      const response = await axios.get('/api/getRumbleEmbedUrl', {
+        params: {url: videoUrl},
+      });
+      const embedUrl = response.data.embedUrl;
+      
+      if(embedUrl) {
+        setIframeSrc(embedUrl);
         return;
       }
-    } else if (rumblePattern.test(videoUrl)) {
+    }
+    catch (error) {
+      console.log('There was no connection', error);
+    }
       const videoId = videoUrl.match(rumblePattern)?.[1];      
       alert('Entered inside the Rumble');
       if (videoId) {
@@ -32,31 +41,17 @@ export default function Home() {
         return;
       }
     }
+    else if (youtubePattern.test(videoUrl)) {
+      const videoId = videoUrl.match(youtubePattern)?.[1];      
+      alert('Entered inside the Youtube');
+      if (videoId) {
+        setIframeSrc(`https://www.youtube.com/embed/${videoId}`);
+        return;
+      }
+    } 
     setIframeSrc(''); // Clear iframe if URL is not valid
     alert('Link is not valid');
   };
-/*
-function testRumblePattern(url: string): void {
-  // Rumble URL pattern
-  const rumblePattern = /rumble\.com\/v\/([a-zA-Z0-9_-]+)(?:\/[^?]*|\?.*)?$/;
-
-  const match = url.match(rumblePattern);
-
-  if (match) {
-    console.log("Match found:", match[1]); // Logs the video ID
-  } else {
-    console.log("No match found.");
-  }
-}
-
-// Test URLs
-const testUrl1 = "https://rumble.com/v4u7lar-shelton-benjamin-makes-fun-of-yoshi-tatsu.html";
-const testUrl2 = "https://rumble.com/v33p0t0-the-tragic-story-of-chris-benoit.html?e9s=rel_v1_b";
-
-// Run tests
-testRumblePattern(testUrl1);
-testRumblePattern(testUrl2);
-*/
   return (
     <main>
       <Image src={logo} className='mx-auto' width={250} height={250} alt="This is the logo of my site." />
