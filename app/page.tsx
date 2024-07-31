@@ -43,14 +43,17 @@ export default function Home() {
     }
     else if (youtubePattern.test(videoUrl)) {
       const videoId = videoUrl.match(youtubePattern)?.[1];      
-      alert('Entered inside the Youtube');
       if (videoId) {
-        setIframeSrc(`https://www.youtube.com/embed/${videoId}`);
+        const embedUrl = generateEmbedUrl(videoId);
+        setIframeSrc(embedUrl);
         return;
       }
     } 
     setIframeSrc(''); // Clear iframe if URL is not valid
     alert('Link is not valid');
+  };
+  const generateEmbedUrl = (videoId: string) => {
+    return `https://www.youtube.com/embed/${videoId}?loop=1&playlist=${videoId}`;
   };
   return (
     <main>
@@ -62,9 +65,8 @@ export default function Home() {
         </form>          
         <button className='p-2 mt-2 bg-red-700 text-center hover:text-red-600 hover:bg-white hover:border-2 hover:border-red-600 font-serif rounded text-sm text-white' type="button" onClick={handleReplayClick}>REPLAY</button>
         {iframeSrc && (
-          <iframe width="640" height="360" src={iframeSrc} allowFullScreen title="Video player"/>
+          <iframe className='' width="640" height="360" src={iframeSrc} allowFullScreen title="Video player"/>
         )}
-        { /*<iframe width="640" height="360" allowFullScreen src='https://rumble.com/embed/v4rpr6f/?pub=4'/> */}
       </div>
       <p className='text-center mt-10'>Watch your favorite YouTube/Rumble video over and over again without pressing replay (:</p>
     </main>
