@@ -17,6 +17,8 @@ export default function Home() {
     const youtubePattern = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     // Rumble URL pattern
     const rumblePattern = /rumble\.com\/v([a-zA-Z0-9_-]+)-/;
+    // Twitter URL pattern
+    const twitterPattern = /x.com\.\/v([a-zA-z0-9_-]+)-/;
     console.log('VideoURL: ' + videoUrl);
     
   if (rumblePattern.test(videoUrl)) {
@@ -41,6 +43,28 @@ export default function Home() {
         return;
       }
     }
+  
+    else if (twitterPattern.test(videoUrl)) {
+      try {
+        const response = await axios.get('api/getTwitterEmbedUrl', {
+          params: {url: videoUrl},
+        });
+        const embedUrl = response.data.embedUrl; 
+        if(embedUrl) {
+          setIframeSrc(embedUrl);
+          return;
+        }
+      }
+      catch (error) {
+        console.log('There was no connection', error);
+      }
+      const videoId = videoUrl.match(twitterPattern)?.[1];
+      if(videoId) {
+        setIframeSrc(`https://x.com/${videoId}/status/1690414010085406945?t=${videoId}`);
+        return;
+      }
+    }
+    
     else if (youtubePattern.test(videoUrl)) {
       const videoId = videoUrl.match(youtubePattern)?.[1];      
       if (videoId) {
@@ -65,7 +89,7 @@ export default function Home() {
         </form>          
         <button className='p-2 mt-2 bg-red-700 text-center hover:text-red-600 hover:bg-white hover:border-2 hover:border-red-600 font-serif rounded text-sm text-white' type="button" onClick={handleReplayClick}>REPLAY</button>
         {iframeSrc && (
-          <iframe className='' width="640" height="360" src={iframeSrc} allowFullScreen title="Video player"/>
+          <iframe className='mt-1' width="640" height="360" src={iframeSrc} allowFullScreen title="Video player"/>
         )}
       </div>
       <p className='text-center mt-10'>Watch your favorite YouTube/Rumble video over and over again without pressing replay (:</p>
