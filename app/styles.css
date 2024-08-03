@@ -1,0 +1,6 @@
+@media (max-width: 860px) {
+    .iframe-video {
+        height: 180px;
+        width: 320px;
+    }
+}

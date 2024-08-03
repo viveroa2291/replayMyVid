@@ -3,6 +3,7 @@ import { useState, ChangeEvent, MouseEvent } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import logo from './images/logo.png';
+import '../app/styles.css';
 
 export default function Home() {
   const [videoUrl, setVideoUrl] = useState<string>('');
@@ -89,7 +90,7 @@ export default function Home() {
         </form>          
         <button className='p-2 mt-2 bg-red-700 text-center hover:text-red-600 hover:bg-white hover:border-2 hover:border-red-600 font-serif rounded text-sm text-white' type="button" onClick={handleReplayClick}>REPLAY</button>
         {iframeSrc && (
-          <iframe className='mt-1' width="640" height="360" src={iframeSrc} allowFullScreen title="Video player"/>
+          <iframe className='mt-1 iframe-video' width="640" height="360" src={iframeSrc} allowFullScreen title="Video player"/>
         )}
       </div>
       <p className='text-center mt-10'>Watch your favorite YouTube/Rumble video over and over again without pressing replay (:</p>
